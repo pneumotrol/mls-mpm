@@ -1,0 +1,45 @@
+[package]
+name = "mls-mpm"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bon = "3.9.1"
+bytemuck = "1.25.0"
+color-eyre = "0.6.5"
+cubecl = "0.9.0"
+
+[features]
+default = ["wgpu"]
+wgpu = ["cubecl/wgpu"]
+cuda = ["cubecl/cuda"]
+
+[dev-dependencies]
+indicatif = "0.18.4"
+itertools = "0.14.0"
+plotters = "0.3.7"
+rand = "0.10.1"
+
+[[example]]
+name = "minimal"
+
+[[example]]
+name = "explosion"
+
+[[example]]
+name = "gravity"
+
+[[example]]
+name = "benchmark"
+
+[[example]]
+name = "minimal_integer"
+
+[[example]]
+name = "explosion_integer"
+
+[[example]]
+name = "gravity_integer"
+
+[[example]]
+name = "benchmark_integer"
