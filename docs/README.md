@@ -6,13 +6,13 @@ A high-performance Moving Least Squares Material Point Method (MLS-MPM) simulati
 
 ### Explosion Example
 
-![Particles]()
-![Grids]()
+![Particles](assets/example_explosion_particles.gif)
+![Grids](assets/example_explosion_grids.gif)
 
 ### Gravity Example
 
-![Particles]()
-![Grids]()
+![Particles](assets/example_gravity_particles.gif)
+![Grids](assets/example_gravity_grids.gif)
 
 ## Overview
 
