@@ -17,8 +17,8 @@ impl<'a, R: Runtime> MlsMpm<'a, R, 2> {
     /// This automatically selects the appropriate pipeline (native f32 or scaled i32 atomics)
     /// based on the simulation configuration.
     pub fn launch(&self) -> Result<()> {
-        if let Some(ato) = &self.atomic_buffer {
-            self.launch_i32_atomic(ato)
+        if let Some(atomic) = &self.atomic_buffer {
+            self.launch_i32_atomic(atomic)
         } else {
             self.launch_f32_atomic()
         }
