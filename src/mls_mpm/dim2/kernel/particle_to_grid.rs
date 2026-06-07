@@ -75,7 +75,7 @@ pub(crate) fn particle_to_grid<F: Float, I: Int>(
     let e = m_param_02[id];
     let stress = {
         let jacobian = f.0.0 * f.1.1 - f.0.1 * f.1.0;
-        let pressure = e * jacobian.powf(-k);
+        let pressure = e * (jacobian.powf(-k) - F::new(1.0));
         ((pressure, F::new(0.0)), (F::new(0.0), pressure))
     };
 
