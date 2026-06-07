@@ -53,6 +53,7 @@ fn main() -> Result<()> {
                     rng.random_range(0.0..grid_dim[0] as f32) * grid_size,
                     rng.random_range(0.0..grid_dim[1] as f32) * grid_size,
                 ])
+                .velocity([rng.random_range(-10.0..10.0), rng.random_range(-10.0..10.0)])
                 .material(materials.get("material_0").unwrap())
                 .build()
         })

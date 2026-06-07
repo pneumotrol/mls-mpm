@@ -40,8 +40,8 @@ fn main() -> Result<()> {
     let grid_size = 1.0 / 16.0;
     let particles = vec![
         ParticleDescriptor::builder()
-            .position([3.5 * grid_size, 3.5 * grid_size])
-            .velocity([1.0, 2.0])
+            .position([4.5 * grid_size, 4.5 * grid_size])
+            .velocity([100.0, 50.0])
             .material(materials.get("material_0").unwrap())
             .build(),
     ];
@@ -82,7 +82,7 @@ fn main() -> Result<()> {
 
     // 6. Run Simulation Loop
     println!("Launching minimal simulation (integer atomics)...");
-    for i in (0..500).progress() {
+    for i in (0..100).progress() {
         if i % 10 == 0 {
             let particle_position = sim.particles().read_position();
             let particle_velocity = sim.particles().read_velocity();

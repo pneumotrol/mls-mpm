@@ -45,16 +45,20 @@ fn main() -> Result<()> {
 
     // Distribute particles in a disk shape at the center.
     let mut rng = StdRng::seed_from_u64(57);
-    let particles = (0..num_particles)
-        .map(|_| {
-            let radius: f32 = rng.random_range(0.0..0.3);
-            let angle: f32 = rng.random_range(0.0..2.0 * std::f32::consts::PI);
-            ParticleDescriptor::builder()
-                .position([radius * angle.cos() + 0.5, radius * angle.sin() + 0.5])
-                .material(materials.get("material_0").unwrap())
-                .build()
-        })
-        .collect();
+    let mut particles = Vec::new();
+    while particles.len() < num_particles {
+        let x: f32 = rng.random_range(-1.0..1.0);
+        let y: f32 = rng.random_range(-1.0..1.0);
+        if x * x + y * y < 0.3 * 0.3 {
+            particles.push(
+                ParticleDescriptor::builder()
+                    .position([x + 0.5, y + 0.5])
+                    .deformation_gradient([[0.5, 0.0], [0.0, 0.5]])
+                    .material(materials.get("material_0").unwrap())
+                    .build(),
+            );
+        }
+    }
 
     let descriptor = MlsMpmDescriptor::builder()
         .particles(particles)

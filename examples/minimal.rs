@@ -43,8 +43,8 @@ fn main() -> Result<()> {
     // Create a single particle with an initial velocity.
     let particles = vec![
         ParticleDescriptor::builder()
-            .position([3.5 * grid_size, 3.5 * grid_size])
-            .velocity([1.0, 2.0])
+            .position([4.5 * grid_size, 4.5 * grid_size])
+            .velocity([100.0, 50.0])
             .material(materials.get("material_0")?)
             .build(),
     ];
@@ -84,7 +84,7 @@ fn main() -> Result<()> {
 
     // 6. Run Simulation Loop
     println!("Launching minimal simulation...");
-    for i in (0..1000).progress() {
+    for i in (0..100).progress() {
         // Visualization: Save plots every 10 steps.
         if i % 10 == 0 {
             let particle_position = sim.particles().read_position();
