@@ -122,7 +122,7 @@ cargo run --release --example minimal
 # Run the gravity simulation with CUDA
 cargo run --release --example gravity --features cuda --no-default-features
 
-# Run the explosion simulation
+# Run the explosion simulation with integer arithmetic
 cargo run --release --example explosion_integer
 
 # Benchmark
