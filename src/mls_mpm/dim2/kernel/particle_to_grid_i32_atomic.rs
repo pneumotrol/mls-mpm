@@ -103,10 +103,10 @@ pub(crate) fn particle_to_grid_i32_atomic<F: Float, I: Int>(
 
             let pressure = e * ((-k * jacobian.ln()).exp() - F::new(1.0));
 
-            stress.0.0 = pressure + mu * (c.0.0 + c.0.0);
-            stress.0.1 = mu * (c.0.1 + c.1.0);
-            stress.1.0 = mu * (c.1.0 + c.0.1);
-            stress.1.1 = pressure + mu * (c.1.1 + c.1.1);
+            stress.0.0 = pressure - mu * (c.0.0 + c.0.0);
+            stress.0.1 = -mu * (c.0.1 + c.1.0);
+            stress.1.0 = -mu * (c.1.0 + c.0.1);
+            stress.1.1 = pressure - mu * (c.1.1 + c.1.1);
         }
         1 => {
             let mu = m_param_01[material_id];
