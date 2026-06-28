@@ -92,7 +92,7 @@ pub(crate) fn particle_to_grid_i32_atomic<F: Float, I: Int>(
     let grid_origin = bottom_left_of_3x3_grid::<F, I>(x, grid_size);
     let weights = quadratic_weights::<F>(x, grid_size);
     let d_inv = F::new(4.0) / (grid_size * grid_size);
-    let jacobian = f.0.0 * f.1.1 - f.0.1 * f.1.0;
+    let jacobian = (f.0.0 * f.1.1 - f.0.1 * f.1.0).max(F::new(1.0e-6));
 
     let mut stress = ((F::new(0.0), F::new(0.0)), (F::new(0.0), F::new(0.0)));
     match material_kind {
@@ -123,9 +123,11 @@ pub(crate) fn particle_to_grid_i32_atomic<F: Float, I: Int>(
             stress.0.0 = -((mu * j_inv) * (b_xx - F::new(1.0)) + vol_stress);
             stress.0.1 = -((mu * j_inv) * b_xy);
             stress.1.0 = -((mu * j_inv) * b_yx);
-            stress.1.1 = -((mu * j_inv) * b_yy + vol_stress);
+            stress.1.1 = -((mu * j_inv) * (b_yy - F::new(1.0)) + vol_stress);
         }
-        _ => {}
+        _ => {
+            terminate!();
+        }
     }
 
     // Compute Affine momentum matrix.
