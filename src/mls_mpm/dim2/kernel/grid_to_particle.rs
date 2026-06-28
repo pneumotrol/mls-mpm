@@ -115,7 +115,9 @@ pub(crate) fn grid_to_particle<F: Float, I: Int>(
         1 => {
             // Elastic: Purely elastic Neo-Hookean solid. Keep F_new as is.
         }
-        _ => {}
+        _ => {
+            terminate!();
+        }
     }
 
     // Advect particle position and store updated state.
