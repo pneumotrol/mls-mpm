@@ -14,6 +14,11 @@ A high-performance Moving Least Squares Material Point Method (MLS-MPM) simulati
 ![Particles](assets/example_gravity_particles.gif)
 ![Grids](assets/example_gravity_grids.gif)
 
+### Elastic Example
+
+![Particles](assets/example_elastic_particles.gif)
+![Grids](assets/example_elastic_grids.gif)
+
 ## Overview
 
 MLS-MPM is a hybrid Lagrangian-Eulerian method used for simulating materials like fluids, snow, and elastic bodies. It combines the strengths of particles (Lagrangian) and background grids (Eulerian) to handle large deformations and topological changes efficiently.

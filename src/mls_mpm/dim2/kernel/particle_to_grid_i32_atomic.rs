@@ -49,8 +49,10 @@ pub(crate) fn particle_to_grid_i32_atomic<F: Float, I: Int>(
     g_velocity_y: &mut Array<Atomic<I>>,
     dim_grids: (usize, usize),
     // Particle physical parameters
+    m_kind: &Array<u32>,
     m_param_01: &Array<F>,
     m_param_02: &Array<F>,
+    m_param_03: &Array<F>,
     num_materials: usize,
     // Simulation parameters
     sim_param: SimulationParameters,
@@ -74,28 +76,57 @@ pub(crate) fn particle_to_grid_i32_atomic<F: Float, I: Int>(
     );
     let m = p_mass[i];
     let v = p_volume[i];
+    let material_id = usize::cast_from(p_material_id[i]);
 
-    // Fetch material parameters.
-    let id = usize::cast_from(p_material_id[i]);
-    if id >= num_materials {
-        terminate!();
-    }
+    // Fetch simulation parameters.
     let dt = F::cast_from(sim_param.dt);
     let grid_size = F::cast_from(sim_param.grid_size);
+
+    // Fetch material kind.
+    if material_id >= num_materials {
+        terminate!();
+    }
+    let material_kind = m_kind[material_id];
 
     // Compute interpolation parameters.
     let grid_origin = bottom_left_of_3x3_grid::<F, I>(x, grid_size);
     let weights = quadratic_weights::<F>(x, grid_size);
     let d_inv = F::new(4.0) / (grid_size * grid_size);
+    let jacobian = f.0.0 * f.1.1 - f.0.1 * f.1.0;
 
-    // Compute internal stress based on material properties.
-    let k = m_param_01[id];
-    let e = m_param_02[id];
-    let stress = {
-        let jacobian = f.0.0 * f.1.1 - f.0.1 * f.1.0;
-        let pressure = e * (jacobian.powf(-k) - F::new(1.0));
-        ((pressure, F::new(0.0)), (F::new(0.0), pressure))
-    };
+    let mut stress = ((F::new(0.0), F::new(0.0)), (F::new(0.0), F::new(0.0)));
+    match material_kind {
+        0 => {
+            let k = m_param_01[material_id];
+            let e = m_param_02[material_id];
+            let mu = m_param_03[material_id];
+
+            let pressure = e * ((-k * jacobian.ln()).exp() - F::new(1.0));
+
+            stress.0.0 = pressure + mu * (c.0.0 + c.0.0);
+            stress.0.1 = mu * (c.0.1 + c.1.0);
+            stress.1.0 = mu * (c.1.0 + c.0.1);
+            stress.1.1 = pressure + mu * (c.1.1 + c.1.1);
+        }
+        1 => {
+            let mu = m_param_01[material_id];
+            let lambda = m_param_02[material_id];
+            let j_inv = F::new(1.0) / jacobian;
+
+            let b_xx = f.0.0 * f.0.0 + f.0.1 * f.0.1;
+            let b_xy = f.0.0 * f.1.0 + f.0.1 * f.1.1;
+            let b_yx = b_xy;
+            let b_yy = f.1.0 * f.1.0 + f.1.1 * f.1.1;
+
+            let vol_stress = (lambda * jacobian.ln()) * j_inv;
+
+            stress.0.0 = -((mu * j_inv) * (b_xx - F::new(1.0)) + vol_stress);
+            stress.0.1 = -((mu * j_inv) * b_xy);
+            stress.1.0 = -((mu * j_inv) * b_yx);
+            stress.1.1 = -((mu * j_inv) * b_yy + vol_stress);
+        }
+        _ => {}
+    }
 
     // Compute Affine momentum matrix.
     let affine = (
