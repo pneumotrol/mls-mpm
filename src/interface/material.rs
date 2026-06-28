@@ -35,6 +35,15 @@ pub enum MaterialKind {
         /// Dynamic viscosity.
         viscosity: f32,
     },
+    /// A purely elastic (Neo-Hookean solid) material.
+    Elastic {
+        /// Density of the material.
+        density: f32,
+        /// Shear modulus (mu) for elastic shear deformation.
+        shear_modulus: f32,
+        /// Bulk modulus (lambda) for volume preservation.
+        bulk_modulus: f32,
+    },
 }
 
 /// Configuration for a single material definition.

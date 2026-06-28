@@ -48,8 +48,8 @@ fn main() -> Result<()> {
         .map(|_| {
             ParticleDescriptor::builder()
                 .position([
-                    rng.random_range(3.5..28.5) * grid_size,
-                    rng.random_range(3.5..28.5) * grid_size,
+                    rng.random_range(4.5..27.5) * grid_size,
+                    rng.random_range(4.5..27.5) * grid_size,
                 ])
                 .material(materials.get("material_0").unwrap())
                 .build()

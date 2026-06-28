@@ -112,7 +112,12 @@ pub(crate) fn grid_to_particle<F: Float, I: Int>(
             f_new.1.0 = F::new(0.0);
             f_new.1.1 = jacobian;
         }
-        _ => {}
+        1 => {
+            // Elastic: Purely elastic Neo-Hookean solid. Keep F_new as is.
+        }
+        _ => {
+            terminate!();
+        }
     }
 
     // Advect particle position and store updated state.

@@ -5,7 +5,7 @@
 //! It does not perform any visualization to avoid I/O bottlenecks.
 //!
 //! The simulation distributes particles randomly across the entire grid
-//! and executes 1000 steps to obtain a stable measurement of the
+//! and executes 100 steps to obtain a stable measurement of the
 //! Particle-to-Grid (P2G) and Grid-to-Particle (G2P) kernel throughput.
 
 use cubecl::prelude::*;
@@ -56,6 +56,7 @@ fn main() -> Result<()> {
                     rng.random_range(0.0..grid_dim[0] as f32) * grid_size,
                     rng.random_range(0.0..grid_dim[1] as f32) * grid_size,
                 ])
+                .velocity([rng.random_range(-10.0..10.0), rng.random_range(-10.0..10.0)])
                 .material(materials.get("material_0").unwrap())
                 .build()
         })
@@ -77,7 +78,7 @@ fn main() -> Result<()> {
     // 4. Run Performance Benchmark
     println!("Launching performance benchmark (1M particles, 1024x1024 grid)...");
     let start = Instant::now();
-    for _ in (0..1000).progress() {
+    for _ in (0..100).progress() {
         // Execute a single simulation step on the GPU.
         sim.launch()?;
     }

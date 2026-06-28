@@ -140,6 +140,7 @@ impl<'a, R: Runtime, const DIM: usize> MlsMpm<'a, R, DIM> {
             let v = (0.5 * grid_size).powi(DIM as i32);
             let rho = match kind {
                 MaterialKind::Fluid { density, .. } => density,
+                MaterialKind::Elastic { density, .. } => density,
             };
 
             for i in 0..DIM {
@@ -212,6 +213,25 @@ impl<'a, R: Runtime, const DIM: usize> MlsMpm<'a, R, DIM> {
                             1 => specific_heat_ratio,
                             2 => stiffness,
                             3 => viscosity,
+                            _ => 0.0,
+                        }
+                    }
+                }
+                MaterialKind::Elastic {
+                    density,
+                    shear_modulus,
+                    bulk_modulus,
+                } => {
+                    material_kind[id] = 1;
+                    for (i, property) in material_property
+                        .iter_mut()
+                        .enumerate()
+                        .take(NUM_MATERIAL_PROPERTIES)
+                    {
+                        property[id] = match i {
+                            0 => density,
+                            1 => shear_modulus,
+                            2 => bulk_modulus,
                             _ => 0.0,
                         }
                     }

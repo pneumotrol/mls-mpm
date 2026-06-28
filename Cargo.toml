@@ -30,6 +30,9 @@ name = "explosion"
 name = "gravity"
 
 [[example]]
+name = "elastic"
+
+[[example]]
 name = "benchmark"
 
 [[example]]
@@ -40,6 +43,9 @@ name = "explosion_integer"
 
 [[example]]
 name = "gravity_integer"
+
+[[example]]
+name = "elastic_integer"
 
 [[example]]
 name = "benchmark_integer"
